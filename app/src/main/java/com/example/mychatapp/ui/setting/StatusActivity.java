@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -69,6 +70,8 @@ public class StatusActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
+                            Intent i = new Intent(StatusActivity.this,SettingsActivity.class);
+                            startActivity(i);
                             mProgress.dismiss();
                         }else{
                             Toast.makeText(StatusActivity.this,"Error in Saving changes",Toast.LENGTH_LONG).show();

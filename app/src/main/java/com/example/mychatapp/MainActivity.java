@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.example.mychatapp.ui.adapters.SectionPagerAdapter;
 import com.example.mychatapp.ui.splash.StartActivity;
 import com.example.mychatapp.ui.setting.SettingsActivity;
+import com.example.mychatapp.ui.users.UsersActivity;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -77,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.setting_account){
             Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsIntent);
+        }
+        if(item.getItemId() == R.id.all_users){
+            Intent usersIntent = new Intent(MainActivity.this, UsersActivity.class);
+            startActivity(usersIntent);
         }
         return true;
     }

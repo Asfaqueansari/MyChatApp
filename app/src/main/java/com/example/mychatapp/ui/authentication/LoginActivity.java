@@ -20,6 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -30,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private ProgressDialog mLoginProgress;
+    private DatabaseReference mUserDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
         mToolbar = findViewById(R.id.login_tool_bar);
         setSupportActionBar(mToolbar);
@@ -56,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 String password = mLoginPassword.getEditableText().toString();
 
                 if(!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
-                    mLoginProgress.setTitle("Loghing in");
+                    mLoginProgress.setTitle("Loging in");
                     mLoginProgress.setMessage("please wait...");
                     mLoginProgress.setCanceledOnTouchOutside(false);
                     mLoginProgress.show();
@@ -75,11 +80,23 @@ public class LoginActivity extends AppCompatActivity {
           if(task.isSuccessful()){
 
               mLoginProgress.dismiss();
-              Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-              mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-              startActivity(mainIntent);
-              finish();
-          }else
+
+              String  current_user_id = mAuth.getCurrentUser().getUid();
+              String  deviceToken = FirebaseInstanceId.getInstance().getToken();
+
+              mUserDatabase.child(current_user_id).child("device_token")
+                      .setValue(deviceToken).addOnCompleteListener(new OnCompleteListener<Void>() {
+                  @Override
+                  public void onComplete(@NonNull Task<Void> task) {
+
+                      Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                      mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                      startActivity(mainIntent);
+                      finish();
+                  }
+              });
+          }
+          else
           {
               mLoginProgress.hide();
               Toast.makeText(LoginActivity.this,"Error",Toast.LENGTH_LONG).show();

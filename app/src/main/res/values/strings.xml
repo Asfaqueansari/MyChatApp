@@ -9,4 +9,9 @@
     <string name="new_status">New Status</string>
     <string name="save_changes">Save Changes</string>
     <string name="change_image">Change Image</string>
+    <string name="users_name">Users name</string>
+    <string name="status">Status</string>
+    <string name="total_friend">Total Friend</string>
+    <string name="send_friend_request">Send Friend Request</string>
+    <string name="decline_friend_request">Decline Friend Request</string>
 </resources>

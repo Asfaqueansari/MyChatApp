@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -85,19 +86,23 @@ public class RegisterActivity extends AppCompatActivity {
                     String uid = currentUser.getUid();
 
                     mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
+                    String deviceToken = FirebaseInstanceId.getInstance().getToken();
 
                     HashMap<String ,String> userMap = new HashMap<>();
                     userMap.put("name",name);
                     userMap.put("status","Hi there I'm using this ChatApp!");
                     userMap.put("image","default");
                     userMap.put("thumb_image","default");
+                    userMap.put("device_token",deviceToken);
 
                     mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 mRegProgress.dismiss();
-                                Intent mainIntent = new Intent(RegisterActivity.this,LoginActivity.class);
+
+
+                                Intent mainIntent = new Intent(RegisterActivity.this, LoginActivity.class);
                                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(mainIntent);
                                 finish();
@@ -105,6 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
                 }
+
                 else {
                     mRegProgress.hide();
                     Toast.makeText(RegisterActivity.this,"Error",Toast.LENGTH_LONG).show();
